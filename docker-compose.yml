@@ -1,0 +1,28 @@
+fs:
+  image: tianon/true
+  volumes:
+    - ./data:/data:ro
+
+samba:
+  image: dperson/samba
+  command: -n -p -s 'data;/data;yes;no;yes;all'
+  environment:
+    - "TZ=EST5EDT"
+  ports:
+    - "137:137"
+    - "139:139"
+    - "445:445"
+  volumes_from:
+    - fs
+
+s3cmd:
+  build: s3cmd
+  env_file: .env
+  volumes_from:
+    - fs
+
+s3curl:
+  build: s3curl
+  env_file: .env
+  volumes_from:
+    - fs

@@ -11,20 +11,31 @@ Through the Makefile, two different docker images can be used to spin up two con
 
 # Usage notes for synching with an S3 connection
 
-Use .env to specify s3cmd-style credentials and then "make upload-s3cmd" or "make upload-s3curl" to sync the data.
+Use `.env` to specify s3cmd-style credentials, a text file with environment variables like:
 
-For debugging purposes and tweaking of configurations, the "make debug-s3cmd" and "make debug-s3curl" can be used.
+	ACCESS_KEY=*
+	SECRET_KEY=*
+	S3_PATH=s3://{hostname-for-s3-provider}
+	HOST_BASE={base-hostname}
+	HOST_BUCKET=s3://{hostname-for-s3-provider}/
+	WEBSITE_ENDPOINT=https://%(bucket).{hostname-for-s3-provider}/
+
+Then issue "make build" and then "make upload-s3cmd" or "make upload-s3curl" to sync the data.
+
+For debugging purposes and tweaking of configurations, use "make debug-s3cmd" and "make debug-s3curl".
 
 ## Issues / TODO
 
-For `s3curl`, find the correct default command line switches that works with a non-Amazon S3 backend... currently the following error is reported when `perl s3curl.pl --id $ACCESS_KEY --key $SECRET_KEY https://s3-archive.api.cloud.ipnett.se/` is being executed:
+For `s3curl`, find the correct default command line switches that works with a non-Amazon S3 backend... currently the following error is reported when ...
 
-<?xml version="1.0" encoding="UTF-8"?><Error><Code>SignatureDoesNotMatch</Code><RequestId>tx00000000000000007ad4d-0057d99d3e-11de2b8-default</RequestId><HostId>11de2b8-default-default</HostId></Error>
+	perl s3curl.pl --id $ACCESS_KEY --key $SECRET_KEY https://s3-archive.api.cloud.ipnett.se/
+
+...is being executed, current error is:
+
+	<?xml version="1.0" encoding="UTF-8"?><Error><Code>SignatureDoesNotMatch</Code><RequestId>tx00000000000000007ad4d-0057d99d3e-11de2b8-default</RequestId><HostId>11de2b8-default-default</HostId></Error>
 
 For `s3cmd`, tweaking of .s3cfg to get rid of the following error (looks like s3cmd gets a redirect HTTP 302? but cannot follow it?):
 
-```bash
-root@d989206512a3:/# s3cmd ls
-ERROR: S3 error: 302 (Found)
-```
+	root@d989206512a3:/# s3cmd ls
+	ERROR: S3 error: 302 (Found)
 

@@ -26,3 +26,11 @@ s3curl:
   env_file: .env
   volumes_from:
     - fs
+
+clamav:
+  build: clamav
+  env_file: .env
+  volumes_from:
+    - fs
+  command: sh -c "clamscan -rv /data"
+

@@ -10,5 +10,8 @@ RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 595E85A6B1B4779EA4DAA
  && gpg --verify /tini.asc
 RUN chmod +x /tini
 
+RUN s3cmd mb s3://nrm.se
+
 ENTRYPOINT ["/tini", "--"]
 CMD ["/start.sh", "no-cron"]
+

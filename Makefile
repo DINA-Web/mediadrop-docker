@@ -9,6 +9,7 @@ all: build up
 
 build:
 	docker-compose build
+	#docker build clamav --tag dina/clamav
 
 debug-s3curl:
 	docker-compose run --rm s3curl sh
@@ -26,10 +27,14 @@ up:
 	@echo "The samba share is available at smb://$(HOST)/data"
 
 upload-s3cmd:
-	docker-compose run --rm s3cmd
+	docker-compose run --rm s3cmd \
+		sh -c "s3cmd sync /data s3://nrm.se"
 
 upload-s3curl:
 	docker-compose run --rm s3curl
+
+scan:
+	docker-compose run --rm clamav
 
 down:
 	docker-compose stop
